@@ -1,0 +1,7 @@
+talo house
+auto car
+kissa cat
+koira dog
+hevonen horse
+lintu bird
+puu tree

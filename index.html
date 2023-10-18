@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    table,
+    th,
+    td {
+      padding: 1px;
+    }
+  </style>
+  <head>
+    <meta charset="UTF-8" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="app.js"></script>
+    <script>
+      $(document).ready(function () {
+        //tallennus
+        $('[name="Submit"]').click(function (e) {
+          e.preventDefault();
+          alert("lähetys");
+
+          const data = {
+            fin: $("#finSave").val(),
+            eng: $("#eng").val(),
+          };
+
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:5000/sanakirja",
+            dataType: "json",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+          })
+            .done((data) => {
+              console.log({ data });
+            })
+            .fail((err) => {
+              console.error(err);
+            })
+            .always(() => {
+              console.log("always called");
+            });
+        });
+        //haku
+        $('[name="Search"]').click(function (e) {
+          e.preventDefault();
+          alert("etsitään");
+
+          const fin = $("#finSearch").val();
+
+          $.ajax({
+            type: "GET",
+            url: `http://localhost:5000/sanakirja/${fin}`,
+            dataType: "json",
+          })
+            .done((data) => {
+              console.log({ data });
+              if (data.eng) {
+                $("output[name='eng']").text(data.eng);
+              } else {
+                $("output[name='eng']").text("Ei löydy");
+              }
+            })
+            .fail((err) => {
+              console.error(err);
+            })
+            .always(() => {
+              console.log("always called");
+            });
+        });
+      });
+    </script>
+    <title>Sanakirja</title>
+  </head>
+  <body>
+    <h1>Sanakirja</h1>
+    <form name="form1">
+      <th><b>Lisää uusi</b></th>
+      <br />
+      <table>
+        <tr>
+          <td align="right">Suomi:</td>
+
+          <td>
+            <input
+              type="text"
+              id="finSave"
+              name="finSave"
+              maxlength="35"
+              size="35"
+              value=""
+            />
+          </td>
+          <br />
+        </tr>
+
+        <tr>
+          <td align="right">Englanti:</td>
+          <td>
+            <input
+              type="text"
+              id="eng"
+              name="eng"
+              maxlength="35"
+              size="35"
+              value=""
+            />
+          </td>
+        </tr>
+
+        <tr>
+          <td align="right"></td>
+          <td>
+            <input name="Submit" type="button" value="Tallenna" />
+          </td>
+        </tr>
+      </table>
+    </form>
+
+    <form name="form2">
+      <th><b>Hae</b></th>
+      <br />
+      <table>
+        <tr>
+          <td align="right">Suomi:</td>
+
+          <td>
+            <input
+              type="text"
+              id="finSearch"
+              name="finSearch"
+              maxlength="35"
+              size="35"
+              value=""
+            />
+          </td>
+          <br />
+        </tr>
+
+        <tr>
+          <td align="right">Englanti:</td>
+          <td>
+            <output
+              name="eng"
+              for="finSearch"
+              id="eng"
+              maxlength="35"
+              size="35"
+              value=""
+            ></output>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="right"></td>
+          <td>
+            <input name="Search" type="button" value="Etsi" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </body>
+</html>
